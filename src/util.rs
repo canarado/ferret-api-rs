@@ -7,6 +7,26 @@ pub fn get_files() -> ReadDir {
 
 }
 
+pub fn get_file_by_id(id: String) -> Option<DirEntry> {
+    let files = get_files();
+
+    for file in files {
+
+        let entry = file.unwrap();
+
+        let file_name = entry.file_name();
+
+        let file_name_string = file_name.to_string_lossy();
+
+        let name = &file_name_string.split(".").collect::<Vec<_>>()[0];
+        if name == &&id {
+            return Some(entry)
+        }
+    }
+
+    return None
+}
+
 pub fn random_file() -> DirEntry {
     let files = get_files();
 

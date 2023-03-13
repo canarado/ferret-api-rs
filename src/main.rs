@@ -20,6 +20,7 @@ async fn main() -> std::io::Result<()> {
                 web::scope("/api")
                     .service(routes::get::random_ferret)
                     .service(routes::post::submit_ferret)
+                    .service(routes::get::get_ferret_by_id)
             )
             .service(fs::Files::new("/cdn", env::var("PUBLIC_ASSETS").unwrap()))
     })
