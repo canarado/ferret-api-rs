@@ -32,7 +32,5 @@ pub async fn submit_ferret(MultipartForm(form): MultipartForm<FerretForm>) -> Re
 
     form.file.file.persist(&path).unwrap();
 
-    println!("{:?}", &path);
-
     Ok(HttpResponse::Ok().finish())
 }
