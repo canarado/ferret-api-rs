@@ -4,7 +4,7 @@ use dotenv::dotenv;
 use std::env;
 
 mod routes;
-mod database;
+mod util;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -12,8 +12,6 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
 
     check_env();
-
-    database::prepare_database().expect("Something went wrong connecting to the Sqlite database");
 
     HttpServer::new(|| {
         App::new()
@@ -23,7 +21,7 @@ async fn main() -> std::io::Result<()> {
                     .service(routes::get::random_ferret)
                     .service(routes::post::submit_ferret)
             )
-            .service(fs::Files::new("/cdn", env::var("PUBLIC_ASSETS").unwrap()).show_files_listing())
+            .service(fs::Files::new("/cdn", env::var("PUBLIC_ASSETS").unwrap()))
     })
     .bind(("127.0.0.1", env::var("API_PORT").unwrap().parse::<u16>().unwrap()))?
     .run()
@@ -31,9 +29,10 @@ async fn main() -> std::io::Result<()> {
 }
 
 fn check_env() {
-    env::var("SQLITE_DB_FILE").expect(format_env_error("SQLITE_DB_FILE").as_str());
     env::var("PUBLIC_ASSETS").expect(format_env_error("PUBLIC_ASSETS").as_str());
     env::var("API_PORT").expect(format_env_error("API_PORT").as_str());
+    env::var("HOSTNAME").expect(format_env_error("HOSTNAME").as_str());
+    env::var("API_KEYS").expect(format_env_error("API_KEYS").as_str());
 }
 
 fn format_env_error(variable_name: &'static str) -> String {

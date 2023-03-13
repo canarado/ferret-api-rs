@@ -1,10 +1,19 @@
-use actix_web::{get, Responder, HttpResponse, web, Result};
-use serde::Deserialize;
-use crate::database::{get_random_ferret};
+use actix_web::{get, Responder, web, Result};
+use serde::{Serialize};
+use std::env;
+
+use crate::util;
+
+#[derive(Serialize)]
+struct Ferret {
+    url: String
+}
 
 #[get("/random")]
 pub async fn random_ferret() -> Result<impl Responder> {
-    let random_ferret = get_random_ferret().unwrap();
+    let file = util::random_file();
 
-    Ok(web::Json(random_ferret))
+    Ok(web::Json(Ferret {
+        url: format!("{}/cdn/{}", env::var("HOSTNAME").unwrap(), file.file_name().to_str().unwrap())
+    }))
 }
