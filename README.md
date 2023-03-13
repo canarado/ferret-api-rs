@@ -1,6 +1,9 @@
 # Ferret API
 Very smol API for getting images of my ferrets
 
+## Libraries
+*coming soon*
+
 ## Endpoints
 The root route is /api
 
