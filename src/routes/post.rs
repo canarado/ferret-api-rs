@@ -24,8 +24,6 @@ pub async fn submit_ferret(MultipartForm(form): MultipartForm<FerretForm>) -> Re
         return Ok(HttpResponse::Forbidden().finish())
     }
 
-    println!("{:?}", form);
-
     let files_dir = env::var("PUBLIC_ASSETS").unwrap();
     let mut path = PathBuf::from(files_dir);
 
