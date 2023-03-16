@@ -2,7 +2,7 @@
 Very smol API for getting images of my ferrets
 
 ## Libraries
-*coming soon*
+- [Node.js](https://github.com/canarado/ferret-api-ts-library)
 
 ## Endpoints
 The root route is /api
