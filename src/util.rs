@@ -24,7 +24,7 @@ pub fn get_file_by_id(id: String) -> Option<DirEntry> {
         }
     }
 
-    return None
+    None
 }
 
 pub fn random_file() -> DirEntry {
@@ -33,13 +33,9 @@ pub fn random_file() -> DirEntry {
     files.choose(&mut rand::thread_rng()).unwrap().unwrap()
 }
 
-pub fn check_api_key(key: String) -> bool {
+pub fn valid_url_key(key: String) -> bool {
     let keys_var = env::var("API_KEYS").unwrap();
     let known_keys = keys_var.split(",").collect::<Vec<_>>();
 
-    if known_keys.contains(&&key.as_str()) {
-        true
-    } else {
-        false
-    }
+    known_keys.contains(&&key.as_str())
 }

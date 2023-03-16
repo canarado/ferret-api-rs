@@ -8,7 +8,7 @@ use actix_multipart::{
 use uuid::Uuid;
 use std::{env, path::PathBuf};
 
-use crate::util::check_api_key;
+use crate::util::valid_url_key;
 
 #[derive(Debug, MultipartForm)]
 pub struct FerretForm {
@@ -20,17 +20,21 @@ pub struct FerretForm {
 #[post("/submit")]
 pub async fn submit_ferret(MultipartForm(form): MultipartForm<FerretForm>) -> Result<impl Responder, Error> {
 
-    if !check_api_key(form.token.to_string()) {
+    if !valid_url_key(form.token.to_string()) {
         return Ok(HttpResponse::Forbidden().finish())
     }
 
     let files_dir = env::var("PUBLIC_ASSETS").unwrap();
     let mut path = PathBuf::from(files_dir);
 
-    let uuid = Uuid::new_v4();
-    path.push(format!("{}.{}", uuid, form.file.file_name.unwrap().split(".").collect::<Vec<_>>()[1]));
-
-    form.file.file.persist(&path).unwrap();
-
-    Ok(HttpResponse::Ok().finish())
+    if let Some(file_name) = form.file.file_name {
+        let uuid = Uuid::new_v4();
+        path.push(format!("{}.{}", uuid, file_name.split(".").collect::<Vec<_>>()[1]));
+    
+        form.file.file.persist(&path).unwrap();
+    
+        Ok(HttpResponse::Ok().finish())
+    } else {
+        Ok(HttpResponse::BadRequest().finish())
+    }
 }
