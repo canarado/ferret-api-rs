@@ -1,5 +1,6 @@
 use actix_web::{App, HttpServer, web, middleware};
 use actix_files as fs;
+use actix_cors::Cors;
 use dotenv::dotenv;
 use std::env;
 
@@ -14,8 +15,12 @@ async fn main() -> std::io::Result<()> {
     check_env();
 
     HttpServer::new(|| {
+
+        let cors = Cors::default().allow_any_origin();
+
         App::new()
             .wrap(middleware::Compress::default())
+            .wrap(cors)
             .service(
                 web::scope("/api")
                     .service(routes::get::random_ferret)
